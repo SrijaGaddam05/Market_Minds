@@ -1,90 +1,230 @@
-📊 MarketMind
+MarketMind AI – Generative AI Marketing Intelligence Platform
+Overview
 
-Generative AI–Powered Sales & Marketing Intelligence Platform
+MarketMind AI is a Generative AI–powered Sales and Marketing Intelligence Platform that helps businesses make smarter marketing decisions using AI-driven insights.
 
-MarketMind is an AI-powered web application that analyzes sales datasets and provides insights, forecasts, and recommendations. Users can upload their sales data, and the system predicts future sales trends, profits, and potential losses using AI models.
+The platform combines AI marketing campaign generation, sentiment analysis, market trend analysis, competitor intelligence, and sales forecasting into a single interactive dashboard.
 
-🚀 Features
+This project demonstrates how Generative AI and Machine Learning can assist businesses in marketing strategy, decision-making, and predictive analytics.
 
-📂 Upload sales dataset (CSV/Excel)
+Key Features
+AI Marketing Campaign Generator
 
-📈 Sales trend visualization
+Generate complete marketing campaigns using Generative AI.
 
-🔮 Future sales prediction
+Input:
 
-💰 Profit and loss analysis
+Product / Service
 
-🤖 AI-generated business insights
+Target Audience
 
-📊 Interactive charts and dashboards
+Output:
 
-🛠️ Technologies Used
+Campaign strategy
 
-Frontend: HTML, CSS, JavaScript
+Tagline
 
-Backend: Python (Flask)
+Marketing channels
 
-AI Model: Groq / LLM API
+Promotional ideas
 
-Data Processing: Pandas, NumPy
+Customer Sentiment Analyzer
 
-Visualization: Chart.js / Matplotlib
+Analyze customer reviews to determine sentiment.
 
-📂 Project Structure
-Market_Minds
+Input:
+
+Customer review text
+
+Output:
+
+Positive / Negative sentiment
+
+Visual sentiment chart
+
+Market Trend Analyzer
+
+Analyze trending topics using market trend data.
+
+Input:
+
+Keyword
+
+Output:
+
+Trend visualization
+
+Market popularity insights
+
+Sales Forecast
+
+Predict product demand based on historical sales data.
+
+Input:
+
+Month number
+
+Output:
+
+Predicted sales value
+
+Forecast chart
+
+Competitor Intelligence
+
+Analyze competitor strategies using AI.
+
+Input:
+
+Competitor name or website
+
+Output:
+
+Strengths
+
+Weaknesses
+
+Marketing strategy
+
+Target audience
+
+Strategic recommendations
+
+Tech Stack
+Frontend
+
+HTML
+
+CSS
+
+JavaScript
+
+Chart.js (for visual analytics)
+
+Backend
+
+Python
+
+FastAPI
+
+Uvicorn
+
+AI / Machine Learning
+
+Groq API (LLM)
+
+HuggingFace Transformers
+
+Scikit-learn
+
+Data Analysis
+
+Pandas
+
+PyTrends
+
+Project Structure
+MarketMind/
 │
-├── backend
+├── backend/
 │   ├── app.py
-│   └── .env
+│   ├── campaign.py
+│   ├── sentiment.py
+│   ├── trends.py
+│   ├── competitor_ai.py
+│   ├── sales_predictor.py
 │
-├── frontend
+├── frontend/
 │   ├── index.html
 │   ├── style.css
-│   └── script.js
+│   ├── dashboard.js
 │
-├── dataset
-│   └── sample_sales_data.csv
+├── data/
+│   └── sales_data.csv
 │
+├── requirements.txt
 └── README.md
-⚙️ Installation
+Installation
+Clone the Repository
+git clone https://github.com/yourusername/MarketMind-AI.git
+cd MarketMind-AI
+Install Dependencies
+pip install -r requirements.txt
 
-1️⃣ Clone the repository
+or manually:
 
-git clone https://github.com/yourusername/Market_Minds.git
+pip install fastapi uvicorn pandas scikit-learn transformers groq pytrends python-multipart
+Run Backend Server
+uvicorn app:app --reload
 
-2️⃣ Navigate to the project folder
+Backend will start at:
 
-cd Market_Minds
+http://127.0.0.1:8000
+Run Frontend
 
-3️⃣ Install dependencies
+Open:
 
-pip install flask pandas python-dotenv
+frontend/index.html
 
-4️⃣ Add your API key in .env
+or run using Live Server.
 
-GROQ_API_KEY=your_api_key_here
-▶️ Run the Project
-python app.py
+API Endpoints
+Generate Campaign
+GET /campaign
 
-Then open in browser:
+Example:
 
-http://127.0.0.1:5000
-📊 Example Workflow
+/campaign?product=sneakers&target=college students
+Sentiment Analysis
+GET /sentiment
 
-Upload a sales dataset.
+Example:
 
-The system analyzes the data.
+/sentiment?text=This product is amazing
+Market Trends
+GET /trends
 
-AI predicts future sales trends.
+Example:
 
-Dashboard displays insights and recommendations.
+/trends?keyword=AI tools
+Sales Prediction
+GET /predict
 
-🎯 Use Cases
+Example:
 
-Sales forecasting
+/predict?month=8
+Competitor Intelligence
+GET /competitor
 
-Marketing strategy planning
+Example:
 
-Business decision support
+/competitor?company=nike
+Example Use Case
 
-Performance analysis
+A marketing team can use MarketMind AI to:
+
+Generate marketing campaigns
+
+Analyze customer feedback sentiment
+
+Track market trends
+
+Predict product demand
+
+Study competitor strategies
+
+This helps businesses make data-driven marketing decisions.
+
+Future Improvements
+
+Possible enhancements include:
+
+Real-time social media data integration
+
+Advanced sales forecasting models
+
+Automated marketing report generation
+
+AI-powered marketing recommendations
+
+User authentication and dashboard analytics
