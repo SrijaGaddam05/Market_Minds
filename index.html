@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MarketMind AI — Intelligence Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- Animated canvas background -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav class="navbar">
+  <div class="nav-left">
+    <div class="nav-logo-mark">◈</div>
+    <span class="nav-brand">MarketMind AI</span>
+    <span class="nav-version">v2.0</span>
+  </div>
+  <div class="nav-right">
+    <div class="nav-pill">
+      <div class="pulse"></div>
+      LIVE
+    </div>
+    <div class="time-badge" id="clock">--:--:--</div>
+    <div class="nav-avatar" title="Account">M</div>
+  </div>
+</nav>
+
+<div class="app">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar">
+    <div class="sidebar-section">Modules</div>
+
+    <div class="nav-item active" onclick="navClick(this,'competitor')">
+      <div class="ni-icon">🔍</div>
+      Competitor Intel
+      <div class="ni-dot"></div>
+    </div>
+    <div class="nav-item" onclick="navClick(this,'sentiment')">
+      <div class="ni-icon">💬</div>
+      Sentiment AI
+      <div class="ni-dot"></div>
+    </div>
+    <div class="nav-item" onclick="navClick(this,'trends')">
+      <div class="ni-icon">📈</div>
+      Market Trends
+      <div class="ni-dot"></div>
+    </div>
+    <div class="nav-item" onclick="navClick(this,'sales')">
+      <div class="ni-icon">📊</div>
+      Sales Forecast
+      <div class="ni-dot"></div>
+    </div>
+    <div class="nav-item" onclick="navClick(this,'campaign')">
+      <div class="ni-icon">🚀</div>
+      Campaign Gen
+      <div class="ni-dot"></div>
+    </div>
+
+    <div class="divider" style="margin:16px 0 12px"></div>
+    <div class="sidebar-section">System</div>
+    <div class="nav-item">
+      <div class="ni-icon">⚙️</div>
+      Settings
+    </div>
+    <div class="nav-item">
+      <div class="ni-icon">📖</div>
+      API Docs
+    </div>
+
+    <div class="sidebar-footer">
+      <p>Connected to<br><strong>localhost:8000</strong></p>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <main class="main">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <div class="page-title">Intelligence <span>Dashboard</span></div>
+        <div class="page-sub">AI-powered marketing analytics & forecasting</div>
+      </div>
+      <div class="header-actions">
+        <span class="badge badge-blue">◉ AI Connected</span>
+        <button class="btn btn-ghost" style="font-size:12px;padding:8px 16px">↻ Refresh</button>
+      </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card" style="--kpi-color: var(--blue)">
+        <div class="kpi-top">
+          <div class="kpi-label">Campaigns</div>
+          <div class="kpi-badge">🚀</div>
+        </div>
+        <div class="kpi-value">2,847</div>
+        <div class="kpi-delta">↑ +12.4% this month</div>
+      </div>
+      <div class="kpi-card" style="--kpi-color: var(--indigo)">
+        <div class="kpi-top">
+          <div class="kpi-label">Sentiment Scored</div>
+          <div class="kpi-badge">💬</div>
+        </div>
+        <div class="kpi-value">18.3K</div>
+        <div class="kpi-delta">↑ +8.1% this week</div>
+      </div>
+      <div class="kpi-card" style="--kpi-color: var(--teal)">
+        <div class="kpi-top">
+          <div class="kpi-label">Forecast Accuracy</div>
+          <div class="kpi-badge">🎯</div>
+        </div>
+        <div class="kpi-value">94.7%</div>
+        <div class="kpi-delta">↑ +2.3% vs last model</div>
+      </div>
+      <div class="kpi-card" style="--kpi-color: var(--amber)">
+        <div class="kpi-top">
+          <div class="kpi-label">Brands Tracked</div>
+          <div class="kpi-badge">🔍</div>
+        </div>
+        <div class="kpi-value">1,204</div>
+        <div class="kpi-delta">↑ +34 added today</div>
+      </div>
+    </div>
+
+    <!-- ═══ ROW 1: COMPETITOR INTELLIGENCE (full width) ═══ -->
+    <div class="panel" id="competitor" style="--accent: var(--rose)">
+      <div class="panel-head">
+        <div class="panel-head-left">
+          <div class="panel-head-icon">🔍</div>
+          <div>
+            <div class="panel-title">Competitor Intelligence</div>
+            <div class="panel-sub">Deep competitive analysis</div>
+          </div>
+        </div>
+        <span class="panel-tag">AI RESEARCH</span>
+      </div>
+      <div class="panel-body">
+        <!-- Input row: field + buttons side by side -->
+        <div style="display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap">
+          <div class="field" style="flex:1;min-width:220px">
+            <label class="field-label">Competitor Name</label>
+            <input id="competitorInput" class="field-input" placeholder="e.g. Nike, Tesla, OpenAI">
+          </div>
+          <div style="display:flex;gap:10px;padding-bottom:1px">
+            <button class="btn btn-primary" id="compBtn" onclick="analyzeCompetitor()" style="background:linear-gradient(135deg,var(--rose),#e11d48);box-shadow:0 4px 16px rgba(251,113,133,0.3)">
+              <div class="spinner"></div>
+              <span class="btn-text">Analyze Competitor</span>
+            </button>
+            <button class="btn btn-ghost" onclick="clearOutput('competitorResult')">Clear</button>
+          </div>
+        </div>
+        <!-- Full-width analysis report below -->
+        <div class="output-label" style="margin-top:20px">Analysis Report</div>
+        <div class="output-box" id="competitorResult" style="min-height:100px;width:100%"></div>
+      </div>
+    </div>
+
+    <!-- ═══ ROW 2: SENTIMENT + TRENDS ═══ -->
+    <div class="section-grid">
+
+      <!-- Sentiment -->
+      <div class="panel" id="sentiment" style="--accent: var(--teal)">
+        <div class="panel-head">
+          <div class="panel-head-left">
+            <div class="panel-head-icon">💬</div>
+            <div>
+              <div class="panel-title">Sentiment Analyzer</div>
+              <div class="panel-sub">NLP emotion detection</div>
+            </div>
+          </div>
+          <span class="panel-tag">NLP</span>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label class="field-label">Customer Review</label>
+            <input id="review" class="field-input" placeholder="Paste review text here…">
+          </div>
+          <div style="margin-top:14px">
+            <button class="btn btn-primary" id="sentBtn" onclick="checkSentiment()" style="background:linear-gradient(135deg,var(--teal),#059669);box-shadow:0 4px 16px rgba(45,212,191,0.3)">
+              <div class="spinner"></div>
+              <span class="btn-text">Analyze Sentiment</span>
+            </button>
+          </div>
+          <div class="chart-box">
+            <div class="chart-label">Sentiment Distribution</div>
+            <canvas id="sentimentChart" height="180"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trends -->
+      <div class="panel" id="trends" style="--accent: var(--indigo)">
+        <div class="panel-head">
+          <div class="panel-head-left">
+            <div class="panel-head-icon">📈</div>
+            <div>
+              <div class="panel-title">Market Trends</div>
+              <div class="panel-sub">Keyword trend analysis</div>
+            </div>
+          </div>
+          <span class="panel-tag">REAL-TIME</span>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label class="field-label">Search Keyword</label>
+            <input id="trendKeyword" class="field-input" placeholder="e.g. AI, crypto, skincare…">
+          </div>
+          <div style="margin-top:14px">
+            <button class="btn btn-primary" id="trendBtn" onclick="getTrends()" style="background:linear-gradient(135deg,var(--indigo),#6366f1);box-shadow:0 4px 16px rgba(129,140,248,0.3)">
+              <div class="spinner"></div>
+              <span class="btn-text">Fetch Trends</span>
+            </button>
+          </div>
+          <div class="chart-box">
+            <div class="chart-label">Trend Over Time</div>
+            <canvas id="trendChart" height="180"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══ ROW 3: SALES + CAMPAIGN ═══ -->
+    <div class="section-grid">
+
+      <!-- Sales Forecast -->
+      <div class="panel" id="sales" style="--accent: var(--amber)">
+        <div class="panel-head">
+          <div class="panel-head-left">
+            <div class="panel-head-icon">📊</div>
+            <div>
+              <div class="panel-title">Sales Forecast</div>
+              <div class="panel-sub">ML-powered demand prediction</div>
+            </div>
+          </div>
+          <span class="panel-tag">ML MODEL</span>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label class="field-label">Month Number (1–12)</label>
+            <input id="monthInput" class="field-input" placeholder="e.g. 6">
+          </div>
+          <div style="margin-top:14px">
+            <button class="btn btn-primary" id="salesBtn" onclick="predictSales()" style="background:linear-gradient(135deg,var(--amber),#d97706);box-shadow:0 4px 16px rgba(251,191,36,0.25);color:#1a1000">
+              <div class="spinner" style="border-top-color:#1a1000"></div>
+              <span class="btn-text">Predict Sales</span>
+            </button>
+          </div>
+          <div class="chart-box">
+            <div class="chart-label">Monthly Forecast</div>
+            <canvas id="salesChart" height="180"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Campaign Generator -->
+      <div class="panel" id="campaign" style="--accent: var(--blue)">
+        <div class="panel-head">
+          <div class="panel-head-left">
+            <div class="panel-head-icon">🚀</div>
+            <div>
+              <div class="panel-title">AI Campaign Generator</div>
+              <div class="panel-sub">Generate compelling marketing copy in seconds</div>
+            </div>
+          </div>
+          <span class="panel-tag">GPT-POWERED</span>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label class="field-label">Product or Service</label>
+            <input id="product" class="field-input" placeholder="e.g. Smart Water Bottle">
+          </div>
+          <div class="field" style="margin-top:14px">
+            <label class="field-label">Target Audience</label>
+            <input id="target" class="field-input" placeholder="e.g. Health-conscious millennials">
+          </div>
+          <div style="display:flex;gap:10px;margin-top:16px">
+            <button class="btn btn-primary" id="campBtn" onclick="generateCampaign()">
+              <div class="spinner"></div>
+              <span class="btn-text">Generate Campaign</span>
+            </button>
+            <button class="btn btn-ghost" onclick="clearOutput('campaignResult')">Clear</button>
+          </div>
+          <div class="output-label" style="margin-top:16px">Campaign Output</div>
+          <div class="output-box" id="campaignResult"></div>
+        </div>
+      </div>
+
+    </div>
+    <div>
+      <h2>Upload Sales Dataset</h2>
+      <input type="file" id="salesFile">
+      <button onclick="uploadSales()">Upload & Predict</button>
+      <div id="salesResult"></div>
+    </div>
+    <!-- Footer spacer -->
+    <div style="height:20px"></div>
+
+  </main>
+</div>
+
+<script src="dashboard.js"></script>
+</body>
+</html>
