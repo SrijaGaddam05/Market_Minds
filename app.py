@@ -5,10 +5,12 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 
 from ai_campaign import generate_campaign
-from sentiment import analyze_sentiment
+from sentiment import analyze_customer_feedback
 from trends import get_trends
 from sales_predictor import predict_sales
 from competitor_ai import analyze_competitor
+from strategy_ai import marketing_strategy
+from idea_ai import generate_ideas
 
 
 app = FastAPI()
@@ -46,7 +48,7 @@ def campaign(product: str, target: str):
 
 @app.get("/sentiment")
 def sentiment(text: str):
-    result = analyze_sentiment(text)
+    result = analyze_customer_feedback(text)
     return {"sentiment": result}
 
 @app.get("/trends")
@@ -61,7 +63,15 @@ def predict(month:int):
 
 @app.get("/competitor")
 def competitor(company:str):
-
     result = analyze_competitor(company)
-
     return {"analysis":result}
+
+@app.get("/strategy")
+def strategy(product:str,audience:str):
+    result = marketing_strategy(product,audience)
+    return {"strategy":result}
+
+@app.get("/ideas")
+def ideas(product:str):
+    result = generate_ideas(product)
+    return {"ideas":result}
