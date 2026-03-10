@@ -517,11 +517,43 @@ body::before {
 /* ══════════════════════════
    PANEL ANIM DELAYS
 ══════════════════════════ */
-.panel:nth-child(1){animation-delay:.15s}
-.panel:nth-child(2){animation-delay:.25s}
-.panel:nth-child(3){animation-delay:.3s}
-.panel:nth-child(4){animation-delay:.35s}
-.panel:nth-child(5){animation-delay:.4s}
+.panel:nth-child(1){animation-delay:.1s}
+.panel:nth-child(2){animation-delay:.18s}
+.panel:nth-child(3){animation-delay:.26s}
+.panel:nth-child(4){animation-delay:.34s}
+.panel:nth-child(5){animation-delay:.42s}
+.panel:nth-child(6){animation-delay:.50s}
+.panel:nth-child(7){animation-delay:.58s}
+
+/* ── TEXTAREA (inherits .field-input, extra overrides) ── */
+textarea.field-input {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.65;
+}
+textarea.field-input:focus {
+  border-color: rgba(79,156,249,0.5);
+  background: rgba(79,156,249,0.04);
+  box-shadow: 0 0 0 3px rgba(79,156,249,0.08);
+}
+
+/* ── STRATEGY panel accent: blue ── */
+#strategy .panel-head-icon {
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--blue) 20%, transparent),
+    color-mix(in srgb, var(--blue) 8%,  transparent));
+  border-color: color-mix(in srgb, var(--blue) 25%, transparent);
+}
+#strategy .output-label::before { background: var(--blue); box-shadow: 0 0 6px var(--blue); }
+
+/* ── IDEAS panel accent: amber ── */
+#ideas .panel-head-icon {
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--amber) 20%, transparent),
+    color-mix(in srgb, var(--amber) 8%,  transparent));
+  border-color: color-mix(in srgb, var(--amber) 25%, transparent);
+}
+#ideas .output-label::before { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
 
 /* ══════════════════════════
    RESPONSIVE
