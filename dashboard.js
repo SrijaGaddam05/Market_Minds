@@ -158,6 +158,54 @@ const chartDefaults = {
   }
 };
 
+/* ═══ AI MARKETING STRATEGY ═══ */
+async function generateStrategy() {
+  const product  = document.getElementById('strategyProduct').value.trim();
+  const audience = document.getElementById('strategyAudience').value.trim();
+  if (!product || !audience) {
+    setOutput('strategyResult', '⚠ Please fill in both fields.');
+    return;
+  }
+  setLoading('strategyBtn', true);
+  try {
+    const r = await fetch(`${API}/strategy?product=${encodeURIComponent(product)}&audience=${encodeURIComponent(audience)}`);
+    const d = await r.json();
+    // Render line by line with spacing
+    const html = d.strategy
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0)
+      .map(line => `<p style="margin:0 0 10px">${line}</p>`)
+      .join('');
+    setOutput('strategyResult', html || '⚠ No output returned.', true);
+  } catch {
+    setOutput('strategyResult', '⚠ Could not reach API server. Make sure it\'s running on localhost:8000.');
+  }
+  setLoading('strategyBtn', false);
+}
+
+/* ═══ AI IDEA GENERATOR ═══ */
+async function generateIdeas() {
+  const product = document.getElementById('ideaProduct').value.trim();
+  if (!product) return;
+  setLoading('ideasBtn', true);
+  try {
+    const r = await fetch(`${API}/ideas?product=${encodeURIComponent(product)}`);
+    const d = await r.json();
+    // Render line by line with spacing
+    const html = d.ideas
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0)
+      .map(line => `<p style="margin:0 0 10px">${line}</p>`)
+      .join('');
+    setOutput('ideaResult', html || '⚠ No output returned.', true);
+  } catch {
+    setOutput('ideaResult', '⚠ Could not reach API server. Make sure it\'s running on localhost:8000.');
+  }
+  setLoading('ideasBtn', false);
+}
+
 /* ═══ CAMPAIGN GENERATOR ═══ */
 async function generateCampaign() {
   const product = document.getElementById('product').value.trim();
@@ -177,47 +225,69 @@ async function generateCampaign() {
   setLoading('campBtn', false);
 }
 
-/* ═══ SENTIMENT ANALYZER ═══ */
-async function checkSentiment() {
-  const text = document.getElementById('review').value.trim();
-  if (!text) return;
-  setLoading('sentBtn', true);
-  try {
-    const r = await fetch(`${API}/sentiment?text=${encodeURIComponent(text)}`);
-    const d = await r.json();
-    const label    = d.sentiment[0].label;
-    const score    = d.sentiment[0].score ?? 0.5;
-    const positive = label === 'POSITIVE' ? score : 1 - score;
-    const negative = 1 - positive;
+/* ═══ SENTIMENT ANALYZER (multi-review) ═══ */
+async function analyzeReviews() {
+  const raw = document.getElementById('reviews').value.trim();
+  if (!raw) return;
 
+  const reviews = raw.split(',').map(r => r.trim()).filter(Boolean);
+  setLoading('sentBtn', true);
+  setOutput('insightsResult', '');
+
+  let positive = 0, negative = 0, neutral = 0;
+  const results = [];
+
+  try {
+    for (const text of reviews) {
+      const r = await fetch(`${API}/sentiment?text=${encodeURIComponent(text)}`);
+      const d = await r.json();
+      const label = d.sentiment[0].label;
+      const score = +(d.sentiment[0].score ?? 0.5).toFixed(2);
+      if      (label === 'POSITIVE') positive++;
+      else if (label === 'NEGATIVE') negative++;
+      else                           neutral++;
+      results.push({ text, label, score });
+    }
+
+    // Chart
     if (sentimentChart) sentimentChart.destroy();
     sentimentChart = new Chart(document.getElementById('sentimentChart'), {
       type: 'doughnut',
       data: {
         labels: ['Positive', 'Negative', 'Neutral'],
         datasets: [{
-          data: [+(positive * 100).toFixed(1), +(negative * 70).toFixed(1), 10],
-          backgroundColor: [
-            'rgba(74,222,128,0.75)',
-            'rgba(251,113,133,0.75)',
-            'rgba(99,179,237,0.3)'
-          ],
-          borderColor: ['#4ade80', '#fb7185', 'rgba(79,156,249,0.4)'],
-          borderWidth: 1.5,
-          hoverOffset: 10
+          data: [positive, negative, neutral],
+          backgroundColor: ['rgba(74,222,128,0.75)', 'rgba(251,113,133,0.75)', 'rgba(99,179,237,0.3)'],
+          borderColor:     ['#4ade80', '#fb7185', 'rgba(79,156,249,0.4)'],
+          borderWidth: 1.5, hoverOffset: 10
         }]
       },
       options: {
-        ...chartDefaults,
-        cutout: '68%',
-        scales: undefined,
+        ...chartDefaults, cutout: '68%', scales: undefined,
         plugins: {
           ...chartDefaults.plugins,
           legend: { position: 'bottom', labels: { color: 'rgba(200,218,255,0.55)', padding: 16, font: { size: 12 } } }
         }
       }
     });
-  } catch { /* silent */ }
+
+    // Insights summary
+    const total = reviews.length;
+    const pct   = v => Math.round((v / total) * 100);
+    const lines = [
+      `📊 Analyzed ${total} review${total > 1 ? 's' : ''} — ${pct(positive)}% Positive · ${pct(negative)}% Negative · ${pct(neutral)}% Neutral`,
+      '',
+      ...results.map((r, i) =>
+        `${i + 1}. "${r.text}" → ${r.label === 'POSITIVE' ? '✅' : r.label === 'NEGATIVE' ? '❌' : '➖'} ${r.label} (${(r.score * 100).toFixed(0)}%)`
+      )
+    ].join('\n');
+
+    setOutput('insightsResult', lines);
+
+  } catch {
+    setOutput('insightsResult', '⚠ Could not reach API server. Make sure it\'s running on localhost:8000.');
+  }
+
   setLoading('sentBtn', false);
 }
 
@@ -316,23 +386,4 @@ async function analyzeCompetitor() {
     setOutput('competitorResult', '⚠ Could not reach API server. Make sure it\'s running on localhost:8000.', false);
   }
   setLoading('compBtn', false);
-}
-async function uploadSales(){
-
-let fileInput = document.getElementById("salesFile").files[0]
-
-let formData = new FormData()
-
-formData.append("file", fileInput)
-
-let response = await fetch("http://127.0.0.1:8000/upload-sales",{
-method:"POST",
-body:formData
-})
-
-let data = await response.json()
-
-document.getElementById("salesResult").innerText =
-"Predicted Sales: " + data.predicted_sales_month_12
-
 }
